@@ -11,6 +11,7 @@ apple.center = get_random_position()
 snake.center = get_random_position()
 length = 1
 segments = [snake.copy()]
+score = 0
 snake_direction = (0, 0)
 time, time_step = 0, 110
 screen = pg.display.set_mode([WINDOW] * 2)
@@ -29,9 +30,17 @@ while True:
                 snake_direction = (-TILE_SIZE, 0)
             if event.key == pg.K_RIGHT:
                 snake_direction = (TILE_SIZE, 0)
+
     screen.fill('black')
+
+    if snake.left < 0 or snake.right > WINDOW or snake.top < 0 or snake.bottom > WINDOW:
+        snake.center, apple.center = get_random_position(), get_random_position()  # Call the functions to get the actual values
+        length, snake_direction = 1, (0, 0)
+        segments = [snake.copy()]
+        score = 0
+
     [pg.draw.rect(screen, 'green', segment) for segment in segments]
-    [pg.draw.rect(screen, 'red', apple)]
+    pg.draw.rect(screen, 'red', apple)
     time_now = pg.time.get_ticks()
     if time_now - time > time_step:
         time = time_now
@@ -41,6 +50,8 @@ while True:
     if snake.center == apple.center:
         apple.center = get_random_position()
         length += 1
+        score += 1
+
     pg.display.flip()
     clock.tick(60)
 
